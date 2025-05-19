@@ -1,461 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TM!Underswap</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --main-color: #ff66b2;
-            --secondary-color: #6bd3ff;
-            --discord-color: #5865F2;
-            --youtube-color: #FF0000;
-            --twitter-color: #1DA1F2;
-            --reddit-color: #FF5700;
-        }
-        
-        body {
-            background-color: #111;
-            color: #fff;
-            font-family: 'Determination Mono Web', monospace;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-            background-image: radial-gradient(circle at center, #222 0%, #000 100%);
-        }
-
-        .corner-message {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background-color: rgba(255, 102, 178, 0.3);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            border: 1px solid var(--main-color);
-            z-index: 100;
-            opacity: 0.7;
-            transition: opacity 0.3s;
-        }
-
-        .social-icons {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            gap: 15px;
-            z-index: 100;
-        }
-
-        .social-icon {
-            color: white;
-            font-size: 1.5rem;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            background-color: rgba(0, 0, 0, 0.5);
-            border: 2px solid transparent;
-        }
-
-        .social-icon:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0 15px currentColor;
-        }
-
-        .social-icon.discord:hover {
-            color: var(--discord-color);
-            border-color: var(--discord-color);
-        }
-
-        .social-icon.youtube:hover {
-            color: var(--youtube-color);
-            border-color: var(--youtube-color);
-        }
-
-        .social-icon.twitter:hover {
-            color: var(--twitter-color);
-            border-color: var(--twitter-color);
-        }
-
-        .social-icon.reddit:hover {
-            color: var(--reddit-color);
-            border-color: var(--reddit-color);
-        }
-
-        @font-face {
-            font-family: 'Determination Mono Web';
-            src: url('https://cdn.jsdelivr.net/gh/alphardex/undertale-web@master/fonts/DeterminationMonoWeb.woff') format('woff');
-        }
-
-        .container {
-            background-color: rgba(10, 10, 20, 0.85);
-            padding: 40px;
-            border-radius: 15px;
-            border: 3px solid var(--main-color);
-            box-shadow: 0 0 30px rgba(255, 102, 178, 0.4);
-            max-width: 900px;
-            margin: 30px 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            border: 2px solid var(--secondary-color);
-            border-radius: 20px;
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        .game-logo {
-            width: 80%;
-            max-width: 600px;
-            margin: 0 auto 30px;
-            image-rendering: pixelated;
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.7));
-            transition: transform 0.3s;
-        }
-
-        .game-logo:hover {
-            transform: scale(1.03);
-        }
-
-        .countdown {
-            font-size: 2.2rem;
-            margin: 30px 0;
-            color: #fff;
-            text-shadow: 0 0 10px var(--main-color);
-            position: relative;
-        }
-
-        .countdown::after {
-            content: '';
-            display: block;
-            width: 60%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, var(--main-color), transparent);
-            margin: 15px auto;
-        }
-
-        .screenshots-container {
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin: 30px auto;
-            overflow: hidden;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
-            border: 2px solid var(--secondary-color);
-        }
-
-        .screenshots {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-            height: 400px;
-        }
-
-        .screenshot {
-            min-width: 100%;
-            height: 100%;
-            object-fit: cover;
-            image-rendering: pixelated;
-        }
-
-        .arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 50px;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 10;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-
-        .arrow:hover {
-            background-color: var(--main-color);
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .left-arrow {
-            left: 15px;
-        }
-
-        .right-arrow {
-            right: 15px;
-        }
-
-        .gamejolt-link {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 30px;
-            background: linear-gradient(135deg, var(--main-color), #ff3385);
-            color: white;
-            text-decoration: none;
-            font-size: 1.3rem;
-            border-radius: 50px;
-            transition: all 0.3s;
-            border: 2px solid white;
-            box-shadow: 0 5px 15px rgba(255, 102, 178, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .gamejolt-link:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 102, 178, 0.6);
-        }
-
-        .gamejolt-link::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-        }
-
-        .gamejolt-link:hover::before {
-            left: 100%;
-        }
-
-        .dots {
-            display: flex;
-            justify-content: center;
-            margin: 15px 0;
-        }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background-color: #444;
-            margin: 0 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .dot.active {
-            background-color: var(--main-color);
-            transform: scale(1.2);
-        }
-
-        @keyframes glow {
-            0% { text-shadow: 0 0 10px var(--main-color); }
-            50% { text-shadow: 0 0 20px var(--main-color); }
-            100% { text-shadow: 0 0 10px var(--main-color); }
-        }
-
-        .coming-soon {
-            animation: glow 2s infinite;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-                width: 90%;
-            }
-            
-            .game-logo {
-                width: 95%;
-            }
-            
-            .countdown {
-                font-size: 1.8rem;
-            }
-            
-            .screenshots-container {
-                height: 250px;
-            }
-            
-            .arrow {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
-            }
-
-            .social-icons {
-                top: 10px;
-                left: 10px;
-                gap: 10px;
-            }
-
-            .social-icon {
-                font-size: 1.2rem;
-                width: 35px;
-                height: 35px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>TM!Underswap</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: 'Courier New', Courier, monospace;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    a {
+      color: yellow;
+      text-decoration: none;
+    }
+    .logo {
+      font-size: 3em;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    .red-text {
+      color: red;
+    }
+    .highlight {
+      color: yellow;
+    }
+    .collector {
+      background-color: #900000;
+      padding: 20px;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 600px;
+      border-radius: 10px;
+    }
+    .news {
+      margin-top: 40px;
+    }
+    .news h2 {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+    }
+    .news-item {
+      margin-bottom: 20px;
+    }
+    .countdown {
+      font-size: 1.5em;
+      margin-top: 30px;
+    }
+  </style>
 </head>
 <body>
-    <div class="social-icons">
-        <a href="#" class="social-icon discord"><i class="fab fa-discord"></i></a>
-        <a href="#" class="social-icon youtube"><i class="fab fa-youtube"></i></a>
-        <a href="#" class="social-icon twitter"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="social-icon reddit"><i class="fab fa-reddit"></i></a>
+
+  <div class="logo">...™</div>
+
+  <div class="red-text">NEW!</div>
+  <div><a href="#">...</a></div>
+
+  <!-- Timer Countdown Placeholder -->
+  <div class="countdown">
+    GAME RELEASE IN: <br>
+    <span id="countdown">?? DAYS ?? HOURS ?? MINUTES ?? SECONDS</span>
+  </div>
+
+  <div class="news">
+    <h2>News and Updates</h2>
     </div>
 
-    <div class="container">
-        <img src="logo.png" alt="TM!Underswap" class="game-logo">
+  </div>
 
-        <div class="countdown">
-            <div class="coming-soon">COMING</div>
-            <div id="timer"></div>
-        </div>
+  <script>
+    // Placeholder countdown logic
+    function updateCountdown() {
+      document.getElementById("countdown").textContent = "?? DAYS ?? HOURS ?? MINUTES ?? SECONDS";
+    }
+    setInterval(updateCountdown, 1000);
+  </script>
 
-        <div class="screenshots-container">
-            <div class="screenshots">
-                <!-- Replace these with your actual screenshots -->
-                <img src="screenshot1.png" class="screenshot" alt="Game Screenshot 1">
-                <img src="screenshot2.png" class="screenshot" alt="Game Screenshot 2">
-                <img src="screenshot3.png" class="screenshot" alt="Game Screenshot 3">
-                <img src="screenshot4.png" class="screenshot" alt="Game Screenshot 4">
-            </div>
-            
-            <button class="arrow left-arrow" onclick="prevSlide()">←</button>
-            <button class="arrow right-arrow" onclick="nextSlide()">→</button>
-        </div>
-
-        <div class="dots" id="dots-container">
-            <!-- Dots will be added by JavaScript -->
-        </div>
-
-        <a href="https://gamejolt.com/games/teammashedunderswap/994069" class="gamejolt-link" target="_blank">VISIT ON GAMEJOLT</a>
-    </div>
-
-    <div class="corner-message">BY: Team Mashed</div>
-
-        <script>
-        // Funkcja do zapisywania danych w localStorage
-        function saveTimerData(endTime) {
-            localStorage.setItem('tmUnderswapTimer', endTime.getTime());
-        }
-
-        // Funkcja do wczytywania danych z localStorage
-        function loadTimerData() {
-            const savedTime = localStorage.getItem('tmUnderswapTimer');
-            if (savedTime) {
-                return new Date(parseInt(savedTime));
-            }
-            return null;
-        }
-
-        // Ustawienie daty końcowej (2 dni od teraz)
-        let targetDate = loadTimerData();
-        
-        // Jeśli nie ma zapisanego timera lub data już minęła, ustaw nowy timer
-        if (!targetDate || targetDate < new Date()) {
-            targetDate = new Date();
-            targetDate.setDate(targetDate.getDate() + 2);
-            saveTimerData(targetDate);
-        }
-
-        // Countdown timer - nowa wersja wyświetlająca pełną datę
-        function updateCountdown() {
-            const now = new Date();
-            const diff = targetDate - now;
-            
-            if (diff <= 0) {
-                document.getElementById('timer').innerHTML = "AVAILABLE NOW!";
-                localStorage.removeItem('tmUnderswapTimer');
-                return;
-            }
-            
-            // Formatowanie daty
-            const options = { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            };
-            
-            document.getElementById('timer').innerHTML = targetDate.toLocaleDateString('en-US', options);
-        }
-
-        // Karuzela screenshotów
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.screenshot');
-        const dotsContainer = document.getElementById('dots-container');
-        const slidesContainer = document.querySelector('.screenshots');
-        
-        // Create dots
-        slides.forEach((_, index) => {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            if (index === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => goToSlide(index));
-            dotsContainer.appendChild(dot);
-        });
-        
-        function updateCarousel() {
-            slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
-            // Update dots
-            document.querySelectorAll('.dot').forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentSlide);
-            });
-        }
-        
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % slides.length;
-            updateCarousel();
-        }
-        
-        function prevSlide() {
-            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-            updateCarousel();
-        }
-        
-        function goToSlide(index) {
-            currentSlide = index;
-            updateCarousel();
-        }
-        
-        // Inicjalizacja
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-        
-        // Auto-advance slides every 5 seconds
-        setInterval(nextSlide, 5000);
-        
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') nextSlide();
-            if (e.key === 'ArrowLeft') prevSlide();
-        });
-    </script>
 </body>
 </html>
