@@ -355,7 +355,7 @@
 
     <div class="corner-message">BY: Team Mashed</div>
 
-    <script>
+        <script>
         // Funkcja do zapisywania danych w localStorage
         function saveTimerData(endTime) {
             localStorage.setItem('tmUnderswapTimer', endTime.getTime());
@@ -380,29 +380,32 @@
             saveTimerData(targetDate);
         }
 
-        // Countdown timer
+        // Countdown timer - nowa wersja wyświetlająca pełną datę
         function updateCountdown() {
             const now = new Date();
             const diff = targetDate - now;
             
             if (diff <= 0) {
                 document.getElementById('timer').innerHTML = "AVAILABLE NOW!";
-                localStorage.removeItem('tmUnderswapTimer'); // Usuń zapisany timer gdy gra jest dostępna
+                localStorage.removeItem('tmUnderswapTimer');
                 return;
             }
             
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            // Formatowanie daty
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
             
-            document.getElementById('timer').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            document.getElementById('timer').innerHTML = targetDate.toLocaleDateString('en-US', options);
         }
-        
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
 
-        // Reszta kodu dotycząca karuzeli screenshotów pozostaje bez zmian
+        // Karuzela screenshotów
         let currentSlide = 0;
         const slides = document.querySelectorAll('.screenshot');
         const dotsContainer = document.getElementById('dots-container');
@@ -440,6 +443,10 @@
             currentSlide = index;
             updateCarousel();
         }
+        
+        // Inicjalizacja
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
         
         // Auto-advance slides every 5 seconds
         setInterval(nextSlide, 5000);
